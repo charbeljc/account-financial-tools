@@ -31,6 +31,6 @@ Optional Fields
 - tax_amount
 - analytic_account
 
-After mandatory and optionnal fields, the header can contain an empty column followed by additionnal ignored fields
+After mandatory and optional fields, the header can contain an empty column followed by additionnal ignored fields
 
 Lines starting with '#' are considered comments and ignored.
