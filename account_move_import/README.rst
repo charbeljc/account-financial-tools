@@ -12,7 +12,7 @@ Before starting the import a number of sanity checks are performed:
 If no issues are found the entry lines will be loaded.
 The resulting Journal Entry will be in draft mode to allow a final check before posting the entry.
 
-The CSV file must have a header line with the following fields:
+The CSV file must have a header line starting with the following case insensitive field names in any order of appearence:
 
 Mandatory Fields
 ----------------
@@ -30,3 +30,7 @@ Optional Fields
 - tax_code (lookup logic : exact match on tax case 'code' field, if not found exact match on tax case 'name')
 - tax_amount
 - analytic_account
+
+After mandatory and optionnal fields, the header can contain an empty column followed by additionnal ignored fields
+
+Lines starting with '#' are considered comments and ignored.

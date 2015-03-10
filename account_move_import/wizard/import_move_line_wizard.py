@@ -86,11 +86,15 @@ class aml_import(orm.TransientModel):
 
         for ln in reader:
 
-            if not ln or ln and ln[0] and ln[0][0] in ['', '#']:
+            # skip blank lines in csv input
+            if not ln:
+                continue
+            # skip lines starting with '#' in csv input
+            if ln[0].startswith('#'):
                 continue
 
-            # process header line
             if not header_line:
+                # process header line
                 if ln[0].strip().lower() not in header_fields:
                     raise orm.except_orm(
                         _('Error :'),
@@ -99,18 +103,17 @@ class aml_import(orm.TransientModel):
                           "the column header fields") % ln)
                 else:
                     header_line = True
-                    # locate first column with empty header
-                    column_cnt = 0
+
                     account_i = debit_i = credit_i = name_i = partner_i = \
                         date_maturity_i = amount_currency_i = currency_i = \
                         tax_code_i = tax_amount_i = analytic_i = None
-                    for cnt in range(len(ln)):
-                        if ln[cnt] == '':
-                            column_cnt = cnt
-                            break
-                        elif cnt == len(ln)-1:
-                            column_cnt = cnt + 1
-                            break
+
+                    # locate first column with empty header
+                    try:
+                        column_cnt = ln.index('')
+                    except ValueError:
+                        column_cnt = len(ln)
+
                     for i in range(column_cnt):
                         # header fields
                         header_field = ln[i].strip().lower()
@@ -149,9 +152,9 @@ class aml_import(orm.TransientModel):
                                 "Invalid CSV File, Header Field '%s' "
                                 "is missing !") % f[1]
 
-            # process data lines
             else:
-                if ln and ln[0] and ln[0][0] not in ['#', '']:
+                # process data line
+                if ln[0]:
 
                     aml_vals = {}
 
